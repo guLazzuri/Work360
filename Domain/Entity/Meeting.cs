@@ -9,7 +9,7 @@ namespace Work360.Domain.Entity
     public class Meeting
     {
         [Key]
-        public required Guid MeetingID { get; set; }
+        public required Guid MeetingID { get; set; } = Guid.NewGuid();
 
         public required Guid UserID { get; set; }
 

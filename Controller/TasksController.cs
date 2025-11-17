@@ -8,6 +8,7 @@ using Work360.Infrastructure.Services;
 namespace Work360.Controller
 {
     [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class TasksController : ControllerBase
     {

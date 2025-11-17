@@ -10,7 +10,7 @@ namespace Work360.Domain.Entity
     public class Tasks
     {
         [Key]
-        public required Guid TaskID { get; set; }
+        public required Guid TaskID { get; set; } = Guid.NewGuid();
 
         public required Guid UserID { get; set; }
 

@@ -8,7 +8,7 @@ namespace Work360.Domain.Entity
     public class Events
     {
         [Key]
-        public required Guid EventID { get; set; }
+        public required Guid EventID { get; set; } = Guid.NewGuid();
         public required Guid UserID { get; set; }
         public EventType EventType { get; set; } = EventType.START_FOCUS_SESSION;
         public DateTime StartDate { get; set; } = DateTime.UtcNow;

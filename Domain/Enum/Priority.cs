@@ -1,8 +1,15 @@
-namespace Work360.Domain.Enum;
+using System.Text.Json.Serialization;
 
-public enum Priority
+namespace Work360.Domain.Enum
 {
-    LOW,
-    MEDIUM,
-    HIGH
+
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+
+    public enum Priority
+    {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
 }
