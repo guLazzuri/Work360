@@ -7,6 +7,8 @@ using Work360.Infrastructure.Context;
 using Work360.Infrastructure.Health;
 using Work360.Infrastructure.Services;
 using Work360.Infrastructure;
+using Work360.Infrastructure.Middleware;
+using Work360.Infrastructure.Security;
 
 // OpenTelemetry
 using OpenTelemetry;
@@ -17,6 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services.AddControllers();
+
+// API KEY CONFIGURATION
+builder.Services.Configure<ApiKeyConfig>(builder.Configuration.GetSection("ApiKeyConfig"));
 
 builder.Services.AddScoped<IHateoasService, HateoasService>();
 
@@ -109,6 +114,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
