@@ -7,6 +7,10 @@ using Work360.Infrastructure.Context;
 using Work360.Infrastructure.Health;
 using Work360.Infrastructure.Services;
 
+// OpenTelemetry
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +19,13 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IHateoasService, HateoasService>();
 
-
-
+// HEALTHCHECK
 builder.Services.AddHealthChecks()
     .AddCheck("Oracle", new OracleHealthCheck(
         builder.Configuration.GetConnectionString("Oracle")
     ));
 
-
-// Adicione versionamento de API
+// VERSIONAMENTO
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
@@ -31,19 +33,22 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 });
 
-// Adicione ApiExplorer para HATEOAS ou Swagger
 builder.Services.AddVersionedApiExplorer(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
 });
 
+// LOGGING
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
-// Adicionar Swagger/OpenAPI
+// SWAGGER
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Registrar o DbContext
+// DATABASE
 builder.Services.AddDbContext<Work360Context>(options =>
 {
     options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
@@ -75,23 +80,19 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     }
 });
 
-
-// Habilitar Swagger apenas em desenvolvimento (opcional)
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Work360 API V1");
-        c.RoutePrefix = string.Empty; // Para acessar em http://localhost:5000/
+        c.RoutePrefix = string.Empty;
     });
 }
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
-
-
 
 app.Run();

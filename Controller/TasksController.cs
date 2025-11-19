@@ -14,11 +14,13 @@ namespace Work360.Controller
     {
         private readonly Work360Context _context;
         private readonly IHateoasService _hateoasService;
+        private readonly ILogger<TasksController> _logger;
 
-        public TasksController(Work360Context context, IHateoasService hateoasService)
+        public TasksController(Work360Context context, IHateoasService hateoasService, ILogger<TasksController> logger)
         {
             _context = context;
             _hateoasService = hateoasService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Work360.Controller
             [FromQuery] int pageSize = 10
             )
         {
+            _logger.LogInformation("Listando tarefas: Página {Page}, Tamanho {Size}", pageNumber, pageSize);
             var paginParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
 
             var totalItens = await _context.Tasks.CountAsync();
@@ -67,6 +70,7 @@ namespace Work360.Controller
         [HttpGet("{id}", Name = "GetTask")]
         public async Task<ActionResult<Tasks>> GetTasks(Guid id)
         {
+            _logger.LogInformation("Buscando tarefa com ID: {TasksId}", id);
             var Tasks = await _context.Tasks.FindAsync(id);
 
             if (Tasks == null)
@@ -89,6 +93,7 @@ namespace Work360.Controller
         [HttpPut("{id}", Name = "UpdateTasks")]
         public async Task<IActionResult> PutTasks(Guid id, Tasks Tasks)
         {
+            _logger.LogInformation("Atualizando tarefa com ID: {TasksId}", id);
             if (id != Tasks.TaskID)
             {
                 return BadRequest();
@@ -125,6 +130,7 @@ namespace Work360.Controller
         [HttpPost(Name = "CreateTasks")]
         public async Task<ActionResult<Tasks>> PostTasks(Tasks Tasks)
         {
+            _logger.LogInformation("Criando nova tarefa");
             _context.Tasks.Add(Tasks);
             await _context.SaveChangesAsync();
 
@@ -141,6 +147,7 @@ namespace Work360.Controller
         [HttpDelete("{id}", Name = "DeleteTasks")]
         public async Task<IActionResult> DeleteTasks(Guid id)
         {
+            _logger.LogInformation("Removendo tarefa com ID: {TasksId}", id);
             var Tasks = await _context.Tasks.FindAsync(id);
             if (Tasks == null)
             {
@@ -155,6 +162,7 @@ namespace Work360.Controller
 
         private bool TasksExists(Guid id)
         {
+            _logger.LogInformation("Verificando existência da tarefa com ID: {TasksId}", id);
             return _context.Tasks.Any(e => e.TaskID == id);
         }
     }

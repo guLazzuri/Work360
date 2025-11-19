@@ -17,12 +17,14 @@ namespace Work360.Controller
     {
         private readonly Work360Context _context;
         private readonly IHateoasService _hateoasService;
+        private readonly ILogger _logger;
 
 
-        public ReportController(Work360Context context, IHateoasService hateoasService)
+        public ReportController(Work360Context context, IHateoasService hateoasService, ILogger logger)
         {
             _context = context;
             _hateoasService = hateoasService;
+            _logger = logger;
         }
 
 
@@ -52,6 +54,7 @@ namespace Work360.Controller
 
             )
         {
+            _logger.LogInformation("Gerando relatório para o usuário {UserId} de {StartDate} a {EndDate}", userId, StartDate, EndDate);
             var paginParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
 
 

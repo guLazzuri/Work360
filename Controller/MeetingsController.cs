@@ -14,11 +14,13 @@ namespace Work360.Controller
     {
         private readonly Work360Context _context;
         private readonly IHateoasService _hateoasService;
+        private readonly ILogger<MeetingController> _logger;
 
-        public MeetingController(Work360Context context, IHateoasService hateoasService)
+        public MeetingController(Work360Context context, IHateoasService hateoasService, ILogger<MeetingController> logger)
         {
             _context = context;
             _hateoasService = hateoasService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Work360.Controller
             [FromQuery] int pageSize = 10
             )
         {
+            _logger.LogInformation("Listando reuniões: Página {Page}, Tamanho {Size}", pageNumber, pageSize);
             var paginParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
 
             var totalItens = await _context.Meetings.CountAsync();
@@ -67,6 +70,7 @@ namespace Work360.Controller
         [HttpGet("{id}", Name = "GetMeeting")]
         public async Task<ActionResult<Meeting>> GetMeeting(Guid id)
         {
+            _logger.LogInformation("Obtendo reunião com ID: {MeetingId}", id);
             var Meeting = await _context.Meetings.FindAsync(id);
 
             if (Meeting == null)
@@ -89,6 +93,7 @@ namespace Work360.Controller
         [HttpPut("{id}", Name = "UpdateMeeting")]
         public async Task<IActionResult> PutMeeting(Guid id, Meeting Meeting)
         {
+            _logger.LogInformation("Atualizando reunião com ID: {MeetingId}", id);
             if (id != Meeting.MeetingID)
             {
                 return BadRequest();
@@ -125,6 +130,7 @@ namespace Work360.Controller
         [HttpPost(Name = "CreateMeeting")]
         public async Task<ActionResult<Meeting>> PostMeeting(Meeting Meeting)
         {
+            _logger.LogInformation("Criando nova reunião");
             _context.Meetings.Add(Meeting);
             await _context.SaveChangesAsync();
 
@@ -141,6 +147,7 @@ namespace Work360.Controller
         [HttpDelete("{id}", Name = "DeleteMeeting")]
         public async Task<IActionResult> DeleteMeeting(Guid id)
         {
+            _logger.LogInformation("Removendo reunião com ID: {MeetingId}", id);
             var Meeting = await _context.Meetings.FindAsync(id);
             if (Meeting == null)
             {
@@ -155,6 +162,7 @@ namespace Work360.Controller
 
         private bool MeetingExists(Guid id)
         {
+            _logger.LogInformation("Verificando existência da reunião com ID: {MeetingId}", id);
             return _context.Meetings.Any(e => e.MeetingID == id);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
 using Work360.Domain.Entity;
@@ -14,11 +15,14 @@ namespace Work360.Controller
     {
         private readonly Work360Context _context;
         private readonly IHateoasService _hateoasService;
+        private readonly ILogger<EventsController> _logger;
 
-        public EventsController(Work360Context context, IHateoasService hateoasService)
+
+        public EventsController(Work360Context context, IHateoasService hateoasService, ILogger<EventsController> logger)
         {
             _context = context;
             _hateoasService = hateoasService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +39,8 @@ namespace Work360.Controller
             [FromQuery] int pageSize = 10
             )
         {
+            _logger.LogInformation("Listando eventos: Página {Page}, Tamanho {Size}", pageNumber, pageSize);
+
             var paginParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
 
             var totalItens = await _context.Events.CountAsync();
@@ -67,6 +73,8 @@ namespace Work360.Controller
         [HttpGet("{id}", Name = "GetEvent")]
         public async Task<ActionResult<Events>> GetEvents(Guid id)
         {
+            _logger.LogInformation("Obtendo evento com ID: {EventId}", id);
+
             var Events = await _context.Events.FindAsync(id);
 
             if (Events == null)
@@ -89,6 +97,8 @@ namespace Work360.Controller
         [HttpPut("{id}", Name = "UpdateEvents")]
         public async Task<IActionResult> PutEvents(Guid id, Events Events)
         {
+            _logger.LogInformation("Atualizando evento com ID: {EventId}", id);
+
             if (id != Events.EventID)
             {
                 return BadRequest();
@@ -125,6 +135,7 @@ namespace Work360.Controller
         [HttpPost(Name = "CreateEvents")]
         public async Task<ActionResult<Events>> PostEvents(Events Events)
         {
+            _logger.LogInformation("Criando um novo evento para o usuário ID: {UserId}", Events.UserID);
             _context.Events.Add(Events);
             await _context.SaveChangesAsync();
 
@@ -141,6 +152,7 @@ namespace Work360.Controller
         [HttpDelete("{id}", Name = "DeleteEvents")]
         public async Task<IActionResult> DeleteEvents(Guid id)
         {
+            _logger.LogInformation("Removendo evento com ID: {EventId}", id);
             var Events = await _context.Events.FindAsync(id);
             if (Events == null)
             {
@@ -155,6 +167,7 @@ namespace Work360.Controller
 
         private bool EventsExists(Guid id)
         {
+            _logger.LogInformation("Verificando existência do evento com ID: {EventId}", id);
             return _context.Events.Any(e => e.EventID == id);
         }
     }

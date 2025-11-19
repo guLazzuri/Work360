@@ -14,11 +14,13 @@ namespace Work360.Controller
     {
         private readonly Work360Context _context;
         private readonly IHateoasService _hateoasService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(Work360Context context, IHateoasService hateoasService)
+        public UserController(Work360Context context, IHateoasService hateoasService, ILogger<UserController> logger)
         {
             _context = context;
             _hateoasService = hateoasService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Work360.Controller
             [FromQuery] int pageSize = 10
             )
         { 
+            _logger.LogInformation("Listando usuários: Página {Page}, Tamanho {Size}", pageNumber, pageSize);
             var paginParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
 
             var totalItens = await _context.Users.CountAsync();         
@@ -67,6 +70,7 @@ namespace Work360.Controller
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
+            _logger.LogInformation("Buscando usuário com ID: {UserId}", id);
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)
@@ -89,6 +93,7 @@ namespace Work360.Controller
         [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> PutUser(Guid id, User user)
         {
+            _logger.LogInformation("Atualizando usuário com ID: {UserId}", id);
             if (id != user.UserID)
             {
                 return BadRequest();
@@ -125,6 +130,7 @@ namespace Work360.Controller
         [HttpPost(Name = "CreateUser")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            _logger.LogInformation("Criando novo usuário");
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -141,6 +147,7 @@ namespace Work360.Controller
         [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
+            _logger.LogInformation("Removendo usuário com ID: {UserId}", id);
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -155,6 +162,7 @@ namespace Work360.Controller
 
         private bool UserExists(Guid id)
         {
+            _logger.LogInformation("Verificando existência do usuário com ID: {UserId}", id);
             return _context.Users.Any(e => e.UserID == id);
         }
     }
