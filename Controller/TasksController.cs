@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
 using Work360.Domain.Entity;
+using Work360.Domain.Enum;
 using Work360.Infrastructure.Context;
 using Work360.Infrastructure.Services;
 
@@ -145,6 +146,52 @@ namespace Work360.Controller
             }
 
             activity?.SetTag("tasks.updated", true);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Update an existing Events
+        /// </summary>
+        /// <param name="id">ID do usuário</param>
+        /// <param name="Events">Dados do usuário para atualização</param>
+        /// <response code="204">Events updated successfully</response>
+        /// <response code="400">Invalid request</response>
+        /// <response code="404">Events not found</response>
+        /// <response code="500">Internal server error</response>
+        [HttpPut("cancel/{id}", Name = "EndTasks")]
+        public async Task<IActionResult> EndTasks(Guid id)
+        {
+            using var activity = ActivitySource.StartActivity("TasksController.EndTasks");
+
+            var Tasks = await _context.Tasks.FirstOrDefaultAsync(x => x.TaskID == id);
+            activity?.SetTag("user", Tasks.ToString());
+            _logger.LogInformation("Finalizando um Tasks {eventid}", Tasks.TaskID);
+
+
+            if (Tasks == null)
+            {
+                return NotFound();
+            }
+
+
+            Tasks.TaskSituation = TaskSituation.COMPLETED;
+            Tasks.FinalDateTask = DateTime.Now;
+
+            if (Tasks.FinalDateTask.HasValue)
+            {
+                Tasks.SpentMinutes = (int)(Tasks.FinalDateTask.Value - Tasks.CreatedTask).TotalMinutes;
+            }
+            else
+            {
+                Tasks.SpentMinutes = 0;
+            }
+
+
+            await _context.SaveChangesAsync();
+
+            activity?.SetTag("event.found", true);
+
 
             return NoContent();
         }

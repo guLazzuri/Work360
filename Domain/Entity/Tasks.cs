@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Work360.Domain.Enum;
+using Work360.Infrastructure.Attributes;
 
 namespace Work360.Domain.Entity
 {
@@ -11,22 +12,22 @@ namespace Work360.Domain.Entity
     {
         [Key]
         public Guid TaskID { get; set; } = Guid.NewGuid();
-
-        public required Guid UserID { get; set; }
-
-        public required string Title { get; set; }
-
-        public required Priority Priority { get; set; }
-
-        public required int EstimateMinutes { get; set; }
-
+        [NotEmptyGuid(ErrorMessage = "UserID cannot be empty GUID.")]
+        public Guid UserID { get; set; }
+        [Required(ErrorMessage ="Title cannot be empty")]
+        public string Title { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Priority cannot be empty")]
+        public  Priority Priority { get; set; }
+        [Required(ErrorMessage = "Estimate minutes cannot be empty")]
+        public int EstimateMinutes { get; set; }
+        [Required(ErrorMessage = "Description minutes cannot be empty")]
         public required string Description { get; set; }
 
         public TaskSituation TaskSituation { get; set; } = TaskSituation.OPEN;
 
         public DateTime CreatedTask { get; set; } = DateTime.UtcNow;
 
-        public DateTime FinalDateTask { get; set; }
+        public DateTime? FinalDateTask { get; set; }
 
         public int SpentMinutes { get; set; }
 

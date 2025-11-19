@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
 using Work360.Domain.Entity;
+using Work360.Domain.Enum;
 using Work360.Infrastructure.Context;
 using Work360.Infrastructure.Services;
 
@@ -142,6 +143,50 @@ namespace Work360.Controller
                 }
             }
             activity?.SetTag("meeting.updated", true);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Update an existing meeting
+        /// </summary>
+        /// <param name="id">ID do usuário</param>
+        /// <param name="meeting">Dados do usuário para atualização</param>
+        /// <response code="204">meeting updated successfully</response>
+        /// <response code="400">Invalid request</response>
+        /// <response code="404">meeting not found</response>
+        /// <response code="500">Internal server error</response>
+        [HttpPut("cancel/{id}", Name = "Endmeeting")]
+        public async Task<IActionResult> Endmeeting(Guid id)
+        {
+            using var activity = ActivitySource.StartActivity("meetingController.Endmeeting");
+
+            var meeting = await _context.Meetings.FirstOrDefaultAsync(x => x.MeetingID == id);
+            activity?.SetTag("user", meeting.ToString());
+            _logger.LogInformation("Finalizando um meeting {meetingid}", meeting.MeetingID);
+
+
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+
+            meeting.EndDate = DateTime.Now;
+
+            if (meeting.EndDate.HasValue)
+            {
+                meeting.MinutesDuration = (int)(meeting.EndDate.Value - meeting.StartDate).TotalMinutes;
+            }
+            else
+            {
+                meeting.MinutesDuration = 0;
+            }
+
+
+            await _context.SaveChangesAsync();
+
+            activity?.SetTag("meeting.found", true);
+
+
             return NoContent();
         }
 

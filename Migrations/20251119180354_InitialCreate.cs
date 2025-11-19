@@ -19,7 +19,7 @@ namespace Work360.Migrations
                     UserID = table.Column<Guid>(type: "RAW(16)", nullable: false),
                     EventType = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
                     StartDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     Duration = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
@@ -34,10 +34,10 @@ namespace Work360.Migrations
                     MeetingID = table.Column<Guid>(type: "RAW(16)", nullable: false),
                     UserID = table.Column<Guid>(type: "RAW(16)", nullable: false),
                     Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    minutesDuration = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    MinutesDuration = table.Column<int>(type: "NUMBER(10)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace Work360.Migrations
                     Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     TaskSituation = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
                     CreatedTask = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    FinalDateTask = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    FinalDateTask = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     SpentMinutes = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>

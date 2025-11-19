@@ -12,7 +12,7 @@ using Work360.Infrastructure.Context;
 namespace Work360.Migrations
 {
     [DbContext(typeof(Work360Context))]
-    [Migration("20251119001845_InitialCreate")]
+    [Migration("20251119180354_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace Work360.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("EventType")
@@ -66,6 +66,9 @@ namespace Work360.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<int?>("MinutesDuration")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -75,9 +78,6 @@ namespace Work360.Migrations
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("RAW(16)");
-
-                    b.Property<int>("minutesDuration")
-                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("MeetingID");
 
@@ -100,7 +100,7 @@ namespace Work360.Migrations
                     b.Property<int>("EstimateMinutes")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("FinalDateTask")
+                    b.Property<DateTime?>("FinalDateTask")
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Priority")

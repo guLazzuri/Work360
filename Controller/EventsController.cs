@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
 using Work360.Domain.Entity;
+using Work360.Domain.Enum;
 using Work360.Infrastructure.Context;
 using Work360.Infrastructure.Services;
 
@@ -97,6 +98,54 @@ namespace Work360.Controller
             return Ok(Events);
         }
 
+
+        /// <summary>
+        /// Update an existing Events
+        /// </summary>
+        /// <param name="id">ID do usuário</param>
+        /// <param name="Events">Dados do usuário para atualização</param>
+        /// <response code="204">Events updated successfully</response>
+        /// <response code="400">Invalid request</response>
+        /// <response code="404">Events not found</response>
+        /// <response code="500">Internal server error</response>
+        [HttpPut("cancel/{id}", Name = "EndEvents")]
+        public async Task<IActionResult> EndEvents(Guid id)
+        {
+            using var activity = ActivitySource.StartActivity("EventsController.EndEvents");
+
+            var events = await _context.Events.FirstOrDefaultAsync(x => x.EventID == id);
+            activity?.SetTag("user", events.ToString());
+            _logger.LogInformation("Finalizando um events {eventid}", events.EventID);
+
+
+            if (events == null)
+            {
+                return NotFound();
+            }
+
+
+            events.EventType = EventType.END_FOCUS_SESSION;
+            events.EndDate = DateTime.Now;
+
+            if (events.EndDate.HasValue)
+            {
+                events.Duration = (int)(events.EndDate.Value - events.StartDate).TotalMinutes;
+            }
+            else
+            {
+                events.Duration = 0; 
+            }
+
+
+            await _context.SaveChangesAsync();
+
+            activity?.SetTag("event.found", true);
+
+
+            return NoContent();
+        }
+
+
         /// <summary>
         /// Update an existing Events
         /// </summary>
@@ -109,10 +158,10 @@ namespace Work360.Controller
         [HttpPut("{id}", Name = "UpdateEvents")]
         public async Task<IActionResult> PutEvents(Guid id, Events Events)
         {
-            using var activity = ActivitySource.StartActivity("EventsController.CreateEvent");
+            using var activity = ActivitySource.StartActivity("EventsController.Update");
             activity?.SetTag("user", Events.ToString());
 
-            _logger.LogInformation("Criando um novo evento para o usuário ID: {UserId}", Events.UserID);
+            _logger.LogInformation("Atualizando events para o usuário ID: {UserId}", Events.UserID);
 
             if (id != Events.EventID)
             {
