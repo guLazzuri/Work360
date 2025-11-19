@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
@@ -35,6 +36,7 @@ namespace Work360.Controller
         /// <response code="200">Return paginated Events</response>
         /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet(Name = "GetEvents")]
         public async Task<ActionResult<IEnumerable<Events>>> GetEvents(
             [FromQuery] int pageNumber = 1,
@@ -78,6 +80,7 @@ namespace Work360.Controller
         /// <response code="200">Return the Events</response>
         /// <response code="404">Events not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet("{id}", Name = "GetEvent")]
         public async Task<ActionResult<Events>> GetEvents(Guid id)
         {
@@ -108,6 +111,7 @@ namespace Work360.Controller
         /// <response code="400">Invalid request</response>
         /// <response code="404">Events not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPut("cancel/{id}", Name = "EndEvents")]
         public async Task<IActionResult> EndEvents(Guid id)
         {
@@ -155,6 +159,7 @@ namespace Work360.Controller
         /// <response code="400">Invalid request</response>
         /// <response code="404">Events not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPut("{id}", Name = "UpdateEvents")]
         public async Task<IActionResult> PutEvents(Guid id, Events Events)
         {
@@ -199,6 +204,7 @@ namespace Work360.Controller
         /// <response code="201">Events created successfully</response>
         /// <response code="400">Invalid request</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPost(Name = "CreateEvents")]
         public async Task<ActionResult<Events>> PostEvents(Events Events)
         {
@@ -223,6 +229,7 @@ namespace Work360.Controller
         /// <response code="204">Events successfully removed</response>
         /// <response code="404">Events not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpDelete("{id}", Name = "DeleteEvents")]
         public async Task<IActionResult> DeleteEvents(Guid id)
         {

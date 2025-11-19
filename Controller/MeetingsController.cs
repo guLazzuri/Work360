@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
@@ -36,6 +37,7 @@ namespace Work360.Controller
         /// <response code="200">Return paginated Meetings</response>
         /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet(Name = "GetMeetings")]
         public async Task<ActionResult<IEnumerable<Meeting>>> GetMeetings(
             [FromQuery] int pageNumber = 1,
@@ -80,6 +82,7 @@ namespace Work360.Controller
         /// <response code="200">Return the Meeting</response>
         /// <response code="404">Meeting not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet("{id}", Name = "GetMeeting")]
         public async Task<ActionResult<Meeting>> GetMeeting(Guid id)
         {
@@ -110,6 +113,7 @@ namespace Work360.Controller
         /// <response code="400">Invalid request</response>
         /// <response code="404">Meeting not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPut("{id}", Name = "UpdateMeeting")]
         public async Task<IActionResult> PutMeeting(Guid id, Meeting Meeting)
         {
@@ -155,6 +159,7 @@ namespace Work360.Controller
         /// <response code="400">Invalid request</response>
         /// <response code="404">meeting not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPut("cancel/{id}", Name = "Endmeeting")]
         public async Task<IActionResult> Endmeeting(Guid id)
         {
@@ -197,6 +202,7 @@ namespace Work360.Controller
         /// <response code="201">Meeting created successfully</response>
         /// <response code="400">Invalid request</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPost(Name = "CreateMeeting")]
         public async Task<ActionResult<Meeting>> PostMeeting(Meeting Meeting)
         {
@@ -220,6 +226,7 @@ namespace Work360.Controller
         /// <response code="204">Meeting successfully removed</response>
         /// <response code="404">Meeting not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpDelete("{id}", Name = "DeleteMeeting")]
         public async Task<IActionResult> DeleteMeeting(Guid id)
         {

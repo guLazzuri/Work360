@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Work360.Domain.DTO;
@@ -33,6 +34,7 @@ namespace Work360.Controller
         /// <response code="200">Return paginated users</response>
         /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet(Name = "GetUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers(
             [FromQuery] int pageNumber = 1,
@@ -77,6 +79,7 @@ namespace Work360.Controller
         /// <response code="200">Return the user</response>
         /// <response code="404">User not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
@@ -107,6 +110,7 @@ namespace Work360.Controller
         /// <response code="400">Invalid request</response>
         /// <response code="404">User not found</response>
         /// <response code="500">Internal server error</response>
+        [Authorize]
         [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> PutUser(Guid id, User user)
         {   

@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 using Work360.Domain.DTO;
 using Work360.Domain.Entity;
 using Work360.Domain.Enum;
@@ -47,6 +46,7 @@ namespace Work360.Controller
         // Tenedencia de produtividade
         // Tendencia Foco
         // Insights
+        [Authorize]
         [HttpGet(Name = "GetReports")]
         public async Task<ActionResult<Report>> GetReport(
             [FromQuery] Guid userId,
