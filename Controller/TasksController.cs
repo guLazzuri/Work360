@@ -165,15 +165,17 @@ namespace Work360.Controller
             using var activity = ActivitySource.StartActivity("TasksController.EndTasks");
 
             var Tasks = await _context.Tasks.FirstOrDefaultAsync(x => x.TaskID == id);
-            activity?.SetTag("user", Tasks.ToString());
-            _logger.LogInformation("Finalizando um Tasks {eventid}", Tasks.TaskID);
+
 
 
             if (Tasks == null)
             {
                 return NotFound();
-            }
 
+            }
+            _logger.LogInformation("Finalizando um Tasks {eventid}", Tasks.TaskID);
+
+            activity?.SetTag("user", Tasks.ToString());
 
             Tasks.TaskSituation = TaskSituation.COMPLETED;
             Tasks.FinalDateTask = DateTime.Now;
