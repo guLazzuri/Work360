@@ -525,9 +525,9 @@ dotnet run
 ```
 
 A API estará disponível em:
-- **HTTP:** http://localhost:5000
-- **HTTPS:** https://localhost:5001
-- **Swagger UI:** http://localhost:5000 (redirecionamento automático)
+- **HTTP:** http://localhost:5191
+- **HTTPS:** https://localhost:7017
+- **Swagger UI:** http://localhost:5191/index.html
 
 ## 🔄 Migrations
 
@@ -832,7 +832,7 @@ A API possui documentação interativa via Swagger UI.
 
 Após iniciar a aplicação, acesse:
 ```
-http://localhost:5000
+http://localhost:5191
 ```
 
 O Swagger UI permite:
