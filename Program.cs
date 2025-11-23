@@ -15,6 +15,9 @@ using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Conexão com Oracle
+var connectionString = builder.Configuration.GetConnectionString("Oracle");
+
 // Controllers
 builder.Services.AddControllers();
 
